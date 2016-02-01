@@ -1,0 +1,20 @@
+<template name="authorTemplate">
+  {{name inheritedAuthor}}
+</template>
+
+<template name="eventDate">
+  {{day eDate}}
+  {{date eDate}}
+  {{time eDate}}
+</template>
+
+<template name="eventPoster">
+  {{#with posterUrl poster}}
+  <img src="{{url store='posters'}}" class="event_poster"/>
+  {{/with}}
+</template>
+
+
+<template name="myFilePreview">
+  <a href="{{file.url}}">{{file.original.name}}</a>
+</template>
