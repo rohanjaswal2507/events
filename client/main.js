@@ -26,7 +26,11 @@ Router.route('/event/:_id', function(){
 Router.route('/addEvent', function(){
   console.log("Rendering add Event page");
   this.render("navbar", {to:"header"});
-  this.render("addEventForm", {to:"main"});
+  if(Meteor.userId()){
+    this.render("addEventForm", {to:"main"});
+  } else {
+    this.render("loginForm", {to:"main"});
+  }
 });
 
 Meteor.setInterval(function(){
@@ -50,16 +54,49 @@ Template.eventList.helpers({
     eventList = Events.find({}, {"sort" : {'startTime':1}} );
     //console.table(eventList);
     return eventList;
-
+  },
+  posterUrl: function(posterId){
+    console.log("Poster: "+posterId);
+    file = Posters.findOne({_id:posterId});
+    fileURL = file.url();
+    //eventData = Events.findOne({poster:posterId});
+    //file.title = eventData.title;
+    return fileURL;
   }
 });
 
 Template.eventPage.helpers({
   eventData: function(){
-    console.log(Session.get("eventId"));
+    //console.log(Session.get("eventId"));
     Event = Events.findOne({_id:Session.get("eventId")});
     Event.begin = new Date(Event.startTime);
     return Event;
+  },
+  calStartTime: function(){
+    eventData = Events.findOne({_id:Session.get("eventId")});
+    eDate = eventData.startTime;
+    date = new Date(Date.parse(eDate));
+    hour = date.getHours();
+    min = date.getMinutes();
+    if(hour > 12){
+      hour = hour%12;
+      return hour + min + " PM";
+    } else {
+      return hour + min + " AM";
+    }
+  },
+  calEndTime: function(){
+    eventData = Events.findOne({_id:Session.get("eventId")});
+    eDate = eventData.endTime;
+    date = new Date(Date.parse(eDate));
+    hour = date.getHours();
+    min = date.getMinutes();
+    if(hour > 12){
+      hour = hour%12;
+      return hour + min + " PM";
+    } else {
+      return hour + min + " AM";
+    }
   }
 });
 
@@ -71,9 +108,17 @@ Template.authorTemplate.helpers({
   }
 });
 
+Template.eventTiming.helpers({
+  eventData: function(){
+    console.log(Session.get("eventId"));
+    Event = Events.findOne({_id:Session.get("eventId")});
+    Event.begin = new Date(Event.startTime);
+    return Event;
+  },
+
+});
 Template.eventDate.helpers({
   day: function(eDate){
-    console.log(eDate);
     date = new Date(eDate);
     days = {
       "1" : "Mon",
@@ -104,20 +149,42 @@ Template.eventDate.helpers({
     };
     month = date.getMonth();
     day = date.getDate();
-    console.log(day);
-    return months[month] + " " + day + ", " + (1900+date.getYear());
+    return months[month] + " " + day;
   },
   time: function(){
 
   }
 });
 
+/*Template.eventTime.helpers({
+  time: function(){
+    console.log("date at eventTime helper: " + eDate)
+    eventData = Events.findOne({_id:Session.get("eventId")});
+    eDate = Events.startTime;
+    date = new Date(Date.parse(eDate));
+    hour = date.getHours();
+    min = date.getMinutes();
+    if(hour > 12){
+      hour = hour%12;
+      return hour + min + " PM";
+    } else {
+      return hour + min + " AM";
+    }
+  }
+});*/
+
 Template.eventPoster.helpers({
-  posterUrl: function(poster){
-    console.log(poster);
-    file = Posters.findOne({_id:poster});
-    console.log(file);
+  posterUrl: function(posterId){
+    console.log("Poster: "+posterId);
+    file = Posters.findOne({_id:posterId});
+    fileURL = file.url();
+    eventData = Events.findOne({poster:posterId});
+    file.title = eventData.title;
     return file;
+  },
+  eventTitle: function(title){
+    console.log("title: "+title);
+    return title;
   }
 });
 

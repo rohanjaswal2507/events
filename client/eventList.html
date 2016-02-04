@@ -1,17 +1,16 @@
 <template name="eventList">
   <div class="container eventDabba">
-    {{#each events}}
-    <div class="row">
-      <div class="col-md-4">
-        <a href="/event/{{_id}}">{{title}}</a>
-      </div>
-      <div class="col-md-4">
-        {{> authorTemplate inheritedAuthor=author}}
-      </div>
-      <div class="col-md-4">
-        {{> eventDate eDate=startTime}}
+    <div class="container">
+      <div class="row" id="masonry">
+        {{#each events}}
+        <div id="eventThumb">
+          <a href="/event/{{_id}}"><img src="{{posterUrl poster}}" class="img-responsive"></a>
+          <p><h4 id="eventName">{{title}}</h4></p>
+          <hr>
+          <p><h4 id="eventName"><big>  {{> eventDate eDate=startTime}}</big></h4></p>
+        </div>
+        {{/each}}
       </div>
     </div>
-    {{/each}}
   </div>
 </template>

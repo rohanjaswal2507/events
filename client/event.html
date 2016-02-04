@@ -1,20 +1,74 @@
 <template name="eventPage">
-  <div class="container eventDabba">
     {{#with eventData}}
-    <div class="row">
-      {{> eventPoster poster=poster}}
-    </div>
-    <div class="row">
-      <h1>{{title}}</h1>
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        <h4>Venue: {{venue}}</h4>
+    {{> eventPoster title=title poster=poster}}
+    <div class="container" id="duration">
+      <div class="table-responsive">
+        <table class="table table-nonfluid">
+          <thead>
+            <tr>
+              <th> Starts @</th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th> Ends @ </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td> <big>{{> eventDate eDate=startTime}}, {{calStartTime}} </big></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td> <big>{{> eventDate eDate=endTime}}, {{calEndTime}}</big></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="col-md-6">
-        <h4>{{> eventDate eDate=begin}}</h4>
+    </div>
+    <div class="container" id="nonfluidContainer">
+      <div class="container col-sm-8" id="eventDescriptor">
+        <div class="row" id="descriptionHeading">
+          <h3>Description</h3>
+        </div>
+        <hr>
+        <div class="row" id="descriptionContent">
+          {{description}}
+        </div>
+      </div>
+      <div class="col-sm-1"></div>
+
+      <div class="container col-sm-3" id="venue">
+
+        <div class="container col-sm-12" id="eventDescriptor">
+          <div class="row" id="descriptionContent">
+            <h4>Target Audience: <strong>{{targetAudience}}</strong></h4>
+          </div>
+        </div>
+
+        <div class="container col-sm-12" id="eventDescriptor">
+          <div class="row" id="descriptionHeading">
+            <h3>Where to Go?</h3>
+          </div>
+          <hr>
+          <div class="row" id="descriptionContent">
+            <h4>{{venue}}</h4>
+          </div>
+        </div>
+
+        <div class="container col-sm-12" id="eventDescriptor">
+         <div class="row" id="descriptionHeading">
+           <h3>Queries?<small> They are here</small></h3>
+        </div>
+        <hr>
+        <div class="row" id="descriptionContent">
+          <h4> Name of the person <br>
+               +91 987 654 3210 </h4>
+        </div>
+      </div>
+
       </div>
     </div>
     {{/with}}
-  </div>
 </template>

@@ -3,17 +3,58 @@
 </template>
 
 <template name="eventDate">
-  {{day eDate}}
+  {{day eDate}},
   {{date eDate}}
   {{time eDate}}
 </template>
 
+
 <template name="eventPoster">
   {{#with posterUrl poster}}
-  <img src="{{url store='posters'}}" class="event_poster"/>
+  <header style="background:linear-gradient(
+                rgba(0, 0, 0, 0),
+                rgba(0, 0, 0, 1)
+              ),url({{this.url}});
+              background-size:cover;
+              background-position:center;">
+    <div class="header-content">
+      <div class="header-content-inner">
+        <h1>{{this.title}}</h1>
+      </div>
+    </div>
+  </header>
   {{/with}}
 </template>
 
+
+<template name="eventTiming">
+  <div class="container" id="duration">
+    <div class="table-responsive">
+      <table class="table table-nonfluid">
+        <thead>
+          <tr>
+            <th> Starts @</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th> Ends @ </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td> hey <strong>hello{{calStartTime}}</strong> </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> {{> eventDate eDate=endTime}}  <strong>{{calEndTime}}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
 
 <template name="myFilePreview">
   <a href="{{file.url}}">{{file.original.name}}</a>
