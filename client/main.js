@@ -11,20 +11,18 @@ Router.configure({
 });
 
 Router.route('/', function(){
-  console.log("rendering /");
+  $('head').append( '<title>NITH Events Portal</title>' );
   this.render("navbar", {to:"header"});
   this.render("eventList", {to:"main"});
 });
 
 Router.route('/event/:_id', function(){
-  console.log('rendering an Event page with id: ' + this.params._id);
   Session.set("eventId", this.params._id);
   this.render("navbar", {to:"header"});
   this.render("eventPage", {to:"main"});
 });
 
 Router.route('/addEvent', function(){
-  console.log("Rendering add Event page");
   this.render("navbar", {to:"header"});
   if(Meteor.userId()){
     this.render("addEventForm", {to:"main"});
@@ -49,14 +47,15 @@ Template.addEventForm.helpers({
 
 Template.eventList.helpers({
   events: function(){
-    console.log("Events queried");
+
     //eventList = Events.find({}).sort({startTime: 1});
-    eventList = Events.find({}, {"sort" : {'startTime':1}} );
-    //console.table(eventList);
+    date = Session.get("current_date");
+    date = Date.parse(date);
+    date = date.toString();
+    eventList = Events.find({startTime: {$gt: date}}, {"sort" : {'startTime':1}} );
     return eventList;
   },
   posterUrl: function(posterId){
-    console.log("Poster: "+posterId);
     file = Posters.findOne({_id:posterId});
     fileURL = file.url();
     //eventData = Events.findOne({poster:posterId});
@@ -67,35 +66,41 @@ Template.eventList.helpers({
 
 Template.eventPage.helpers({
   eventData: function(){
-    //console.log(Session.get("eventId"));
     Event = Events.findOne({_id:Session.get("eventId")});
     Event.begin = new Date(Event.startTime);
+    $('head').append( '<title>'+Event.title+' - NITH Events Portal</title>' );
     return Event;
   },
   calStartTime: function(){
     eventData = Events.findOne({_id:Session.get("eventId")});
     eDate = eventData.startTime;
-    date = new Date(Date.parse(eDate));
+    date = new Date(parseInt(eDate));
     hour = date.getHours();
     min = date.getMinutes();
+    if(min < 10){
+      min = "0" + min.toString();
+    }
     if(hour > 12){
       hour = hour%12;
-      return hour + min + " PM";
+      return hour + ":" + min + " PM";
     } else {
-      return hour + min + " AM";
+      return hour + ":" + min + " AM";
     }
   },
   calEndTime: function(){
     eventData = Events.findOne({_id:Session.get("eventId")});
     eDate = eventData.endTime;
-    date = new Date(Date.parse(eDate));
+    date = new Date(parseInt(eDate));
     hour = date.getHours();
     min = date.getMinutes();
+    if(min < 10){
+      min = "0" + min.toString();
+    }
     if(hour > 12){
       hour = hour%12;
-      return hour + min + " PM";
+      return hour + ":" + min + " PM";
     } else {
-      return hour + min + " AM";
+      return hour + ":" + min + " AM";
     }
   }
 });
@@ -110,7 +115,7 @@ Template.authorTemplate.helpers({
 
 Template.eventTiming.helpers({
   eventData: function(){
-    console.log(Session.get("eventId"));
+    log(Session.get("eventId"));
     Event = Events.findOne({_id:Session.get("eventId")});
     Event.begin = new Date(Event.startTime);
     return Event;
@@ -119,7 +124,7 @@ Template.eventTiming.helpers({
 });
 Template.eventDate.helpers({
   day: function(eDate){
-    date = new Date(eDate);
+    date = new Date(parseInt(eDate));
     days = {
       "1" : "Mon",
       "2" : "Tue",
@@ -132,7 +137,7 @@ Template.eventDate.helpers({
     return days[date.getDay()];
   },
   date: function(eDate){
-    date = new Date(eDate);
+    date = new Date(parseInt(eDate));
     months = {
       "0" : "Jan",
       "1" : "Feb",
@@ -158,7 +163,6 @@ Template.eventDate.helpers({
 
 /*Template.eventTime.helpers({
   time: function(){
-    console.log("date at eventTime helper: " + eDate)
     eventData = Events.findOne({_id:Session.get("eventId")});
     eDate = Events.startTime;
     date = new Date(Date.parse(eDate));
@@ -175,7 +179,6 @@ Template.eventDate.helpers({
 
 Template.eventPoster.helpers({
   posterUrl: function(posterId){
-    console.log("Poster: "+posterId);
     file = Posters.findOne({_id:posterId});
     fileURL = file.url();
     eventData = Events.findOne({poster:posterId});
@@ -183,15 +186,13 @@ Template.eventPoster.helpers({
     return file;
   },
   eventTitle: function(title){
-    console.log("title: "+title);
     return title;
   }
 });
 
 Template.afQuickField.events({
   'change .fileInput': function(event, template) {
-    console.log("event called");
-    FS.Utility.eachFile(event, function(file){
+  FS.Utility.eachFile(event, function(file){
       var fileObj = new FS.File(file);
       Posters.insert(fileObj, function(err, fileObj){
           if(!err){
