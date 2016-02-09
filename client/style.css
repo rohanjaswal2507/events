@@ -99,6 +99,12 @@ header .header-content .header-content-inner h1 {
   padding: 0px;
 }
 
+.eventDabba{
+  margin-top:50px;
+}
+.event_poster{
+  width: 100%;
+}
 
 #myCarousel {
     width: 100%;
@@ -158,13 +164,13 @@ header .header-content .header-content-inner h1 {
 }
 
 #masonry { /* Masonry container */
-  -moz-column-count:4;
+  -moz-column-count:3;
   -moz-column-gap: 3%;
   -moz-column-width: 20%;
   -webkit-column-count:3;
   -webkit-column-gap: 3%;
-  -webkit-column-width: 30%;
-  column-count: 4;
+  -webkit-column-width: 20%;
+  column-count: 3;
   column-gap: 3%;
   column-width: 20%;
 }

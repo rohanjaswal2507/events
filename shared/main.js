@@ -1,15 +1,15 @@
 Meteor.methods({
   addEvent: function(newEvent){
-    console.log("addEvent method running");
-    if (Meteor.userId()){
-      newEvent.startTime = Date.parse(newEvent.startTime);
-      newEvent.endTime = Date.parse(newEvent.endTime);
-      newEvent.author = Meteor.userId();
-      newEvent.something = "something";
-      console.log(newEvent.something);
-      Events.insert(newEvent);
+    user = Meteor.users.findOne({_id:Meteor.userId()});
+    if (user.emails){
+      if (Meteor.userId()){
+        newEvent.startTime = Date.parse(newEvent.startTime);
+        newEvent.endTime = Date.parse(newEvent.endTime);
+        newEvent.author = Meteor.userId();
+        Events.insert(newEvent);
+      }
     } else {
-      alert("Please Login First!");
+        alert("You are not authorized to post an Event");
     }
   }
 });
