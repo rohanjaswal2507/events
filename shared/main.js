@@ -13,3 +13,8 @@ Meteor.methods({
     }
   }
 });
+
+
+/*Accounts.config({
+    forbidClientAccountCreation: true
+});*/
